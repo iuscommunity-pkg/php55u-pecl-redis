@@ -9,23 +9,12 @@
 
 %global pecl_name  redis
 %global with_zts   0%{?__ztsphp:1}
+%global with_tests 1
 # after 40-igbinary
 %global ini_name    50-%{pecl_name}.ini
 
 %define real_name php-pecl-redis
 %define php_base php55u
-
-%if 0%{?fedora} >= 19
-%ifarch ppc64
-# redis have ExcludeArch: ppc64
-%global with_test  0
-%else
-%global with_test  1
-%endif
-%else
-# redis version is too old
-%global with_test  0
-%endif
 
 Summary:       Extension for communicating with the Redis key-value store
 Name:          %{php_base}-pecl-redis
@@ -41,7 +30,8 @@ Source1:       https://github.com/nicolasff/phpredis/archive/%{version}.tar.gz
 BuildRequires: %{php_base}-devel
 #BuildRequires: php-pecl-igbinary-devel
 # to run Test suite
-%if %{with_test}
+%if %{with_tests}
+# should use redis28u
 BuildRequires: redis >= 2.6
 %endif
 
@@ -143,24 +133,28 @@ install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 # Install the package XML file
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
+# Test & Documentation
+cd nts
+for i in $(grep 'role="doc"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 $i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
+done
+
 
 %check
 # simple module load test
-#ln -sf %{php_extdir}/igbinary.so nts/modules/igbinary.so
-php --no-php-ini \
+%{__php} --no-php-ini \
     --define extension_dir=nts/modules \
-    --define extension=%{pecl_name}.so \
+    --define extension=%{buildroot}%{php_extdir}/%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
 %if %{with_zts}
-#ln -sf %{php_ztsextdir}/igbinary.so zts/modules/igbinary.so
 %{__ztsphp} --no-php-ini \
     --define extension_dir=zts/modules \
-    --define extension=%{pecl_name}.so \
+    --define extension=%{buildroot}%{php_ztsextdir}/%{pecl_name}.so \
     --modules | grep %{pecl_name}
 %endif
 
-%if %{with_test}
+%if %{with_tests}
 cd nts/tests
 
 # this test requires redis >= 2.6.9
@@ -170,7 +164,8 @@ sed -e s/testClient/SKIP_testClient/ \
 
 # Launch redis server
 mkdir -p {run,log,lib}/redis
-sed -e "s:/var:$PWD:" \
+sed -e "s:/^pidfile.*$:/pidfile $PWD/run/redis.pid:" \
+    -e "s:/var:$PWD:" \
     -e "/daemonize/s/no/yes/" \
     /etc/redis.conf >redis.conf
 # port number to allow 32/64 build at same time
@@ -190,14 +185,14 @@ sed -e "s/6379/$port/" -i TestRedis.php
 
 # Run the test Suite
 ret=0
-php --no-php-ini \
+%{__php} --no-php-ini \
     --define extension_dir=../modules \
-    --define extension=%{pecl_name}.so \
+    --define extension=%{buildroot}%{php_extdir}/%{pecl_name}.so \
     TestRedis.php || ret=1
 
 # Cleanup
-if [ -f run/redis/redis.pid ]; then
-   kill $(cat run/redis/redis.pid)
+if [ -f run/redis.pid ]; then
+   kill $(cat run/redis.pid)
 fi
 
 exit $ret
@@ -218,7 +213,7 @@ fi
 
 
 %files
-%doc nts/{COPYING,CREDITS,README.markdown,arrays.markdown}
+%doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 
 %{php_extdir}/%{pecl_name}.so
