@@ -28,7 +28,7 @@ Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 Source1:       https://github.com/nicolasff/phpredis/archive/%{version}.tar.gz
 
 BuildRequires: %{php_base}-devel
-#BuildRequires: php-pecl-igbinary-devel
+BuildRequires: %{php_base}-pecl-igbinary-devel
 # to run Test suite
 %if %{with_tests}
 # should use redis28u
@@ -37,7 +37,8 @@ BuildRequires: redis >= 2.6
 
 Requires:      %{php_base}(zend-abi) = %{php_zend_api}
 Requires:      %{php_base}(api) = %{php_core_api}
-# php-pecl-igbinary missing php-pecl(igbinary)%{?_isa}
+Requires:      %{php_base}-pecl-igbinary%{?_isa}
+
 Conflicts:     %{real_name} < %{version}
 
 Provides:      php-redis = %{version}-%{release}
@@ -102,6 +103,7 @@ cd nts
 %configure \
     --enable-redis \
     --enable-redis-session \
+    --enable-redis-igbinary \
     --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
@@ -111,6 +113,7 @@ cd ../zts
 %configure \
     --enable-redis \
     --enable-redis-session \
+    --enable-redis-igbinary \
     --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
 %endif
@@ -143,13 +146,13 @@ done
 %check
 # simple module load test
 %{__php} --no-php-ini \
-    --define extension_dir=nts/modules \
+    --define extension=igbinary.so \
     --define extension=%{buildroot}%{php_extdir}/%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
 %if %{with_zts}
 %{__ztsphp} --no-php-ini \
-    --define extension_dir=zts/modules \
+    --define extension=igbinary.so \
     --define extension=%{buildroot}%{php_ztsextdir}/%{pecl_name}.so \
     --modules | grep %{pecl_name}
 %endif
@@ -186,7 +189,7 @@ sed -e "s/6379/$port/" -i TestRedis.php
 # Run the test Suite
 ret=0
 %{__php} --no-php-ini \
-    --define extension_dir=../modules \
+    --define extension=igbinary.so \
     --define extension=%{buildroot}%{php_extdir}/%{pecl_name}.so \
     TestRedis.php || ret=1
 
