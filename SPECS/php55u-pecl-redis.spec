@@ -36,7 +36,7 @@ Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 # https://github.com/nicolasff/phpredis/issues/332 - missing tests
 Source1:       https://github.com/nicolasff/phpredis/archive/%{version}.tar.gz
 
-BuildRequires: %{php_base}-devel %{php_base}-pear
+BuildRequires: %{php_base}-devel
 #BuildRequires: php-pecl-igbinary-devel
 # to run Test suite
 %if %{with_test}
@@ -47,6 +47,7 @@ Requires:      %{php_base}(zend-abi) = %{php_zend_api}
 Requires:      %{php_base}(api) = %{php_core_api}
 # php-pecl-igbinary missing php-pecl(igbinary)%{?_isa}
 Conflicts:     %{real_name} < %{version}
+
 Provides:      php-redis = %{version}-%{release}
 Provides:      %{real_name} = %{version}-%{release}
 Provides:      %{php_base}-redis = %{version}-%{release}
