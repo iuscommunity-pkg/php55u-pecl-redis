@@ -11,7 +11,6 @@
 %global with_zts   0%{?__ztsphp:1}
 
 %define real_name php-pecl-redis
-%define base_ver 2.2
 %define php_base php55u
 
 %if 0%{?fedora} >= 19
