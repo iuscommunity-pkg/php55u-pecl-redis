@@ -92,6 +92,11 @@ extension = %{pecl_name}.so
 
 ; phpredis can be used to store PHP sessions.
 ; To do this, uncomment and configure below
+
+; RPM note : save_handler and save_path are defined
+; for mod_php, in /etc/httpd/conf.d/php.conf
+; for php-fpm, in %{_sysconfdir}/php-fpm.d/*conf
+
 ;session.save_handler = %{pecl_name}
 ;session.save_path = "tcp://host1:6379?weight=1, tcp://host2:6379?weight=2&timeout=2.5, tcp://host3:6379?weight=2"
 EOF
