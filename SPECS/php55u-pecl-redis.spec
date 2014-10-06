@@ -9,6 +9,8 @@
 
 %global pecl_name  redis
 %global with_zts   0%{?__ztsphp:1}
+# after 40-igbinary
+%global ini_name    50-%{pecl_name}.ini
 
 %define real_name php-pecl-redis
 %define php_base php55u
@@ -93,7 +95,7 @@ cp -pr nts zts
 %endif
 
 # Drop in the bit of configuration
-cat > %{pecl_name}.ini << 'EOF'
+cat > %{ini_name} << 'EOF'
 ; Enable %{pecl_name} extension module
 extension = %{pecl_name}.so
 
@@ -130,12 +132,12 @@ make %{?_smp_mflags}
 
 # Install the NTS stuff
 make -C nts install INSTALL_ROOT=%{buildroot}
-install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
+install -D -m 644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
 
 # Install the ZTS stuff
 %if %{with_zts}
 make -C zts install INSTALL_ROOT=%{buildroot}
-install -D -m 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
+install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
 # Install the package XML file
@@ -220,11 +222,11 @@ fi
 %{pecl_xmldir}/%{name}.xml
 
 %{php_extdir}/%{pecl_name}.so
-%config(noreplace) %{php_inidir}/%{pecl_name}.ini
+%config(noreplace) %{php_inidir}/%{ini_name}
 
 %if %{with_zts}
 %{php_ztsextdir}/%{pecl_name}.so
-%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
+%config(noreplace) %{php_ztsinidir}/%{ini_name}
 %endif
 
 
