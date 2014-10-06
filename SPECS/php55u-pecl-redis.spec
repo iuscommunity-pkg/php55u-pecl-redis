@@ -39,6 +39,9 @@ Requires:      %{php_base}(zend-abi) = %{php_zend_api}
 Requires:      %{php_base}(api) = %{php_core_api}
 Requires:      %{php_base}-pecl-igbinary%{?_isa}
 
+Requires(post): %{php_base}-pear
+Requires(postun): %{php_base}-pear
+
 Conflicts:     %{real_name} < %{version}
 
 Provides:      php-redis = %{version}-%{release}
@@ -125,9 +128,6 @@ make %{?_smp_mflags}
 
 
 %install
-# for short circuit
-#rm -f ?ts/modules/igbinary.so
-
 # Install the NTS stuff
 make -C nts install INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
