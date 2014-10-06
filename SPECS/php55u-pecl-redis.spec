@@ -189,7 +189,7 @@ port=6382
 %endif
 sed -e "s/6379/$port/" -i redis.conf
 sed -e "s/6379/$port/" -i TestRedis.php
-%{_sbindir}/redis-server ./redis.conf
+%{_bindir}/redis-server ./redis.conf
 
 # Run the test Suite
 ret=0
