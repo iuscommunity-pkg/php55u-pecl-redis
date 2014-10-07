@@ -170,6 +170,11 @@ cd nts/tests
 sed -e s/testClient/SKIP_testClient/ \
     -i TestRedis.php
 
+# this test requires redis >= 2.8.0
+# self-described as "problematic"
+sed -e s/testPubSub/SKIP_testPubSub/ \
+    -i TestRedis.php
+
 # Launch redis server
 mkdir -p {run,log,lib}/redis
 sed -e "s:/^pidfile.*$:/pidfile $PWD/run/redis.pid:" \
