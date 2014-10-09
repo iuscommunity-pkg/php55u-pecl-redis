@@ -9,7 +9,7 @@
 
 %global pecl_name  redis
 %global with_zts   0%{?__ztsphp:1}
-%global with_tests 1
+%global with_tests 0
 # after 40-igbinary
 %global ini_name    50-%{pecl_name}.ini
 
