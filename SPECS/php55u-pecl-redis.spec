@@ -19,13 +19,11 @@
 Summary:       Extension for communicating with the Redis key-value store
 Name:          %{php_base}-pecl-redis
 Version:       2.2.7
-Release:       1.ius%{?dist}
+Release:       2.ius%{?dist}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/redis
 Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-# https://github.com/nicolasff/phpredis/issues/332 - missing tests
-Source1:       https://github.com/nicolasff/phpredis/archive/%{version}.tar.gz
 
 BuildRequires: %{php_base}-devel
 BuildRequires: %{php_base}-pecl-igbinary-devel
@@ -69,12 +67,10 @@ some doesn't work with an old redis server version.
 
 
 %prep
-%setup -q -c -a 1
+%setup -q -c
 
 # rename source folder
 mv %{pecl_name}-%{version} nts
-# tests folder from github archive
-mv phpredis-%{version}/tests nts/tests
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_REDIS_VERSION/{s/.* "//;s/".*$//;p}' nts/php_redis.h)
@@ -239,6 +235,9 @@ fi
 
 
 %changelog
+* Sat Feb 13 2016 Carl George <carl.george@rackspace.com> - 2.2.7-2.ius
+- Remove Source1, tests are now included in Source0
+
 * Wed Mar 04 2015 Carl George <carl.george@rackspace.com> - 2.2.7-1.ius
 - Latest upstream
 
