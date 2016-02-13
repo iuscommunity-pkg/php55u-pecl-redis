@@ -225,6 +225,7 @@ fi
 
 
 %files
+%{?_licensedir:%license nts/COPYING}
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 
@@ -243,6 +244,7 @@ fi
 - Add pear as a build requirement
 - Only provide version for stock name, not release
 - Wrap filter provides in conditional
+- Mark COPYING file with %%license when possible
 
 * Wed Mar 04 2015 Carl George <carl.george@rackspace.com> - 2.2.7-1.ius
 - Latest upstream
