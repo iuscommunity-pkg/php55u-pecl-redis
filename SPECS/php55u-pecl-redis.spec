@@ -53,9 +53,11 @@ Provides:      %{php_base}-pecl(%{pecl_name}) = %{version}
 Provides:      php-pecl(%{pecl_name})%{?_isa} = %{version}
 Provides:      %{php_base}-pecl(%{pecl_name})%{?_isa} = %{version}
 
+%if 0%{?fedora} < 20 && 0%{?rhel} < 7
 # Filter private shared object
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
+%endif
 
 
 %description
@@ -240,6 +242,7 @@ fi
 - Remove Source1, tests are now included in Source0
 - Add pear as a build requirement
 - Only provide version for stock name, not release
+- Wrap filter provides in conditional
 
 * Wed Mar 04 2015 Carl George <carl.george@rackspace.com> - 2.2.7-1.ius
 - Latest upstream
