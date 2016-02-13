@@ -41,10 +41,10 @@ Requires:      %{php_base}-pecl-igbinary%{?_isa}
 Requires(post): %{php_base}-pear
 Requires(postun): %{php_base}-pear
 
+Provides:      %{real_name} = %{version}
 Conflicts:     %{real_name} < %{version}
 
 Provides:      php-redis = %{version}-%{release}
-Provides:      %{real_name} = %{version}-%{release}
 Provides:      %{php_base}-redis = %{version}-%{release}
 Provides:      php-redis%{?_isa} = %{version}-%{release}
 Provides:      %{php_base}-redis%{?_isa} = %{version}-%{release}
@@ -239,6 +239,7 @@ fi
 * Sat Feb 13 2016 Carl George <carl.george@rackspace.com> - 2.2.7-2.ius
 - Remove Source1, tests are now included in Source0
 - Add pear as a build requirement
+- Only provide version for stock name, not release
 
 * Wed Mar 04 2015 Carl George <carl.george@rackspace.com> - 2.2.7-1.ius
 - Latest upstream
