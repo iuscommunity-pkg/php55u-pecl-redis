@@ -15,8 +15,7 @@
 # after 40-igbinary
 %global ini_name    50-%{pecl_name}.ini
 
-%define real_name php-pecl-redis
-%define php_base php55u
+%global php_base php55u
 
 Summary:       Extension for communicating with the Redis key-value store
 Name:          %{php_base}-pecl-redis
@@ -43,17 +42,24 @@ Requires:      %{php_base}-pecl-igbinary%{?_isa}
 Requires(post): %{php_base}-pear
 Requires(postun): %{php_base}-pear
 
-Provides:      %{real_name} = %{version}
-Conflicts:     %{real_name} < %{version}
+# provide the stock name
+Provides:      php-pecl-%{pecl_name} = %{version}
+Provides:      php-pecl-%{pecl_name}%{?_isa} = %{version}
 
-Provides:      php-redis = %{version}-%{release}
-Provides:      %{php_base}-redis = %{version}-%{release}
-Provides:      php-redis%{?_isa} = %{version}-%{release}
-Provides:      %{php_base}-redis%{?_isa} = %{version}-%{release}
+# provide the stock and IUS names without pecl
+Provides:      php-%{pecl_name} = %{version}
+Provides:      php-%{pecl_name}%{?_isa} = %{version}
+Provides:      %{php_base}-%{pecl_name} = %{version}
+Provides:      %{php_base}-%{pecl_name}%{?_isa} = %{version}
+
+# provide the stock and IUS names in pecl() format
 Provides:      php-pecl(%{pecl_name}) = %{version}
-Provides:      %{php_base}-pecl(%{pecl_name}) = %{version}
 Provides:      php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:      %{php_base}-pecl(%{pecl_name}) = %{version}
 Provides:      %{php_base}-pecl(%{pecl_name})%{?_isa} = %{version}
+
+# conflict with the stock name
+Conflicts:     php-pecl-%{pecl_name} < %{version}
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
 # Filter private shared object
@@ -245,6 +251,7 @@ fi
 %changelog
 * Thu Jun 09 2016 Carl George <carl.george@rackspace.com> - 2.2.8-1.ius
 - Latest upstream
+- Clean up provides and conflicts
 
 * Sat Feb 13 2016 Carl George <carl.george@rackspace.com> - 2.2.7-2.ius
 - Remove Source1, tests are now included in Source0
