@@ -61,11 +61,11 @@ Provides:      %{php_base}-pecl(%{pecl_name})%{?_isa} = %{version}
 # conflict with the stock name
 Conflicts:     php-pecl-%{pecl_name} < %{version}
 
-%if 0%{?fedora} < 20 && 0%{?rhel} < 7
-# Filter private shared object
-%{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
+# RPM 4.8
+%{?filter_provides_in: %filter_provides_in %{php_extdir}/.*\.so$}
 %{?filter_setup}
-%endif
+# RPM 4.9
+%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{php_extdir}/.*\\.so$
 
 
 %description
@@ -252,6 +252,7 @@ fi
 * Thu Jun 09 2016 Carl George <carl.george@rackspace.com> - 2.2.8-1.ius
 - Latest upstream
 - Clean up provides and conflicts
+- Clean up filters
 
 * Sat Feb 13 2016 Carl George <carl.george@rackspace.com> - 2.2.7-2.ius
 - Remove Source1, tests are now included in Source0
