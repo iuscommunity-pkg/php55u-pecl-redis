@@ -148,7 +148,7 @@ install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
 # Install the package XML file
-install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
+install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{pecl_name}.xml
 
 # Test & Documentation
 cd nts
@@ -225,7 +225,7 @@ exit $ret
 
 
 %post
-%{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+%{pecl_install} %{pecl_xmldir}/%{pecl_name}.xml >/dev/null || :
 
 
 %postun
@@ -237,7 +237,7 @@ fi
 %files
 %{?_licensedir:%license nts/COPYING}
 %doc %{pecl_docdir}/%{pecl_name}
-%{pecl_xmldir}/%{name}.xml
+%{pecl_xmldir}/%{pecl_name}.xml
 
 %{php_extdir}/%{pecl_name}.so
 %config(noreplace) %{php_inidir}/%{ini_name}
@@ -253,6 +253,7 @@ fi
 - Latest upstream
 - Clean up provides and conflicts
 - Clean up filters
+- Install package.xml as %%{pecl_name}.xml, not %%{name}.xml
 
 * Sat Feb 13 2016 Carl George <carl.george@rackspace.com> - 2.2.7-2.ius
 - Remove Source1, tests are now included in Source0
