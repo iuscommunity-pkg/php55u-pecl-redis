@@ -1,4 +1,6 @@
-# spec file for php-pecl-redis
+# IUS spec file for php56u-pecl-redis, forked from:
+
+# Fedora spec file for php-pecl-redis
 #
 # Copyright (c) 2012-2013 Remi Collet
 # License: CC-BY-SA
