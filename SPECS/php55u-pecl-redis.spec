@@ -107,7 +107,7 @@ EOF
 
 
 %build
-cd nts
+pushd nts
 %{_bindir}/phpize
 %configure \
     --enable-redis \
@@ -115,9 +115,10 @@ cd nts
     --enable-redis-igbinary \
     --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
+popd
 
 %if %{with_zts}
-cd ../zts
+pushd zts
 %{_bindir}/zts-phpize
 %configure \
     --enable-redis \
@@ -125,6 +126,7 @@ cd ../zts
     --enable-redis-igbinary \
     --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
+popd
 %endif
 
 
