@@ -225,13 +225,17 @@ exit $ret
 
 
 %post
+%if 0%{?pecl_install:1}
 %{pecl_install} %{pecl_xmldir}/%{pecl_name}.xml >/dev/null || :
+%endif
 
 
 %postun
+%if 0%{?pecl_uninstall:1}
 if [ $1 -eq 0 ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
+%endif
 
 
 %files
@@ -255,6 +259,7 @@ fi
 - Clean up filters
 - Install package.xml as %%{pecl_name}.xml, not %%{name}.xml
 - Preserve timestamps when installing files
+- Wrap %%post and %%postun in conditionals to prevent warnings
 
 * Sat Feb 13 2016 Carl George <carl.george@rackspace.com> - 2.2.7-2.ius
 - Remove Source1, tests are now included in Source0
